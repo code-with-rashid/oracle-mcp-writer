@@ -1,0 +1,12 @@
+[project]
+name = "oracle-mcp-writer"
+version = "0.1.0"
+description = "Add your description here"
+readme = "README.md"
+requires-python = ">=3.10"
+dependencies = [
+    "fastapi>=0.117.1",
+    "mcp[cli]>=1.14.1",
+    "sqlalchemy>=2.0.43",
+    "uvicorn>=0.36.1",
+]
