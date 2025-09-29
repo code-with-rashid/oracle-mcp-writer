@@ -7,15 +7,15 @@ from sqlalchemy import text
 
 mcp = FastMCP("Oracle MCP Writer")
 
-# ORACLE_URL = os.getenv(
-#     "ORACLE_URL",
-#     "oracle+oracledb://demo:demo123@oracledb19c-oracle-db.oracle19C.svc.cluster.local:1521/?service_name=orclpdb1"
-# )
-
 ORACLE_URL = os.getenv(
     "ORACLE_URL",
-    "oracle+oracledb://demo:demo123@localhost:59043/?service_name=orclpdb1"
+    "oracle+oracledb://demo:demo123@oracledb19c-oracle-db.oracle19C.svc.cluster.local:1521/?service_name=orclpdb1"
 )
+
+# ORACLE_URL = os.getenv(
+#     "ORACLE_URL",
+#     "oracle+oracledb://demo:demo123@localhost:59043/?service_name=orclpdb1"
+# )
 
 engine = sqlalchemy.create_engine(ORACLE_URL, future=True)
 
