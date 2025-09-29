@@ -3,6 +3,14 @@ name = "oracle-mcp-writer"
 version = "0.1.0"
 description = "Add your description here"
 readme = "README.md"
+authors = [{ name = "Your Name", email = "your.email@example.com" }]
+license = { text = "MIT License" }
+classifiers = [
+    "Programming Language :: Python :: 3",
+    "License :: OSI Approved :: MIT License",
+    "Operating System :: OS Independent",
+]
+
 requires-python = ">=3.10"
 dependencies = [
     "fastapi>=0.117.1",
@@ -11,3 +19,11 @@ dependencies = [
     "sqlalchemy>=2.0.43",
     "uvicorn>=0.36.1",
 ]
+
+[build-system]
+requires = ["hatchling"]
+build-backend = "hatchling.build"
+
+[tool.hatch.metadata]
+allow-direct-references = true
+
