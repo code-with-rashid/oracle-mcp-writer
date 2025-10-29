@@ -45,28 +45,28 @@ def create_leave_request(user_id: str, start_date: str, end_date: str, leave_typ
         INSERT INTO leave_requests
           (user_id, start_date, end_date, leave_type, reason, status, created_at)
         VALUES (:uid, TO_DATE(:s, 'YYYY-MM-DD'), TO_DATE(:e, 'YYYY-MM-DD'), :t, :r, 'Pending', SYSTIMESTAMP)
-        RETURNING request_id INTO :rid
     """)
+
+    # Sequence name used by the trigger
+    sequence_sql = text("SELECT leave_request_seq.CURRVAL AS rid FROM dual")
 
     try:
         with engine.begin() as conn:
-            # Bind variable to capture the generated request_id
-            out_param = sqlalchemy.bindparam("rid", type_=sqlalchemy.Integer, outparam=True)
-            result = conn.execute(
-                text("""
-                    BEGIN
-                        INSERT INTO leave_requests
-                          (user_id, start_date, end_date, leave_type, reason, status, created_at)
-                        VALUES (:uid, TO_DATE(:s, 'YYYY-MM-DD'), TO_DATE(:e, 'YYYY-MM-DD'), :t, :r, 'Pending', SYSTIMESTAMP)
-                        RETURNING request_id INTO :rid;
-                    END;
-                """),
-                {"uid": user_id, "s": start_date, "e": end_date, "t": leave_type, "r": reason, "rid": out_param}
-            )
-            rid_value = result.out_parameters["rid"]
+            # Insert the leave request (trigger generates request_id)
+            conn.execute(insert_sql, {
+                "uid": user_id,
+                "s": start_date,
+                "e": end_date,
+                "t": leave_type,
+                "r": reason
+            })
+
+            # Fetch the generated request_id from the sequence
+            rid_value = conn.execute(sequence_sql).scalar()
 
         return {"status": "created", "request_id": rid_value}
 
     except Exception as e:
         return {"error": str(e), "status": "failed"}
+
 
